@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sqx.modules.contract.dao.ContractTypeDao">
+
+    <resultMap id="BaseResultMap" type="com.sqx.modules.contract.entity.ContractType">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="typeName" column="type_name" jdbcType="VARCHAR"/>
+            <result property="sort" column="sort" jdbcType="INTEGER"/>
+            <result property="createUserId" column="create_user_id" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateUserId" column="update_user_id" jdbcType="INTEGER"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,type_name,sort,
+        create_user_id,create_time,update_user_id,
+        update_time
+    </sql>
+    <select id="selectByAllList" resultType="com.sqx.modules.contract.entity.ContractType">
+        select
+        <include refid="Base_Column_List"/>
+        from contract_type
+        <where>
+            <trim prefix="WHERE" prefixOverrides="AND|OR">
+                <if test="contractType != null and contractType.typeName != null">
+                    AND type_name LIKE CONCAT('%', #{contractType.typeName}, '%')
+                </if>
+            </trim>
+        </where>
+    </select>
+    <select id="selectByAll" resultType="com.sqx.modules.contract.entity.ContractType">
+        select
+        <include refid="Base_Column_List"/>
+        from contract_type
+    </select>
+</mapper>

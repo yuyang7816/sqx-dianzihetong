@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sqx.modules.contract.dao.ContractDao">
+
+    <resultMap id="BaseResultMap" type="com.sqx.modules.contract.entity.Contract">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="templateId" column="template_id" jdbcType="INTEGER"/>
+        <result property="contractName" column="contract_name" jdbcType="VARCHAR"/>
+        <result property="contractNumber" column="contract_number" jdbcType="VARCHAR"/>
+        <result property="contractType" column="contract_type" jdbcType="INTEGER"/>
+        <result property="dataJson" column="data_json"
+                typeHandler="com.sqx.modules.utils.typeHandler.DataJsonListTypeHandler"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="annexUrl" column="annex_url" jdbcType="VARCHAR"/>
+        <result property="fileUrl" column="file_url" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="selectMySigned" resultType="com.sqx.modules.contract.entity.Contract">
+        select c.*,u.user_name as userName,u.avatar as userAvatar
+        from contract c
+        left join contract_and_user ca on c.id = ca.contract_id
+        left join tb_user u on u.user_id = c.user_id
+        where c.user_id = #{userId} and c.draft_status = 0
+        group by c.id
+        order by c.create_time desc
+    </select>
+    <select id="selectMyReceive" resultType="com.sqx.modules.contract.entity.Contract">
+        select c.*,u.user_name as userName,u.avatar as userAvatar
+        from contract c
+        left join contract_and_user ca on c.id = ca.contract_id
+        left join tb_user u on u.user_id = c.user_id
+        where ca.copy_user = #{userId} and c.draft_status = 0
+        group by c.id
+        order by c.create_time desc
+    </select>
+    <select id="selectMyAllContractList" resultType="com.sqx.modules.contract.entity.Contract">
+        select c.*,u.avatar as userAvatar
+        from contract c
+        left join contract_and_user ca on c.id = ca.contract_id
+        left join tb_user u on u.user_id = c.user_id
+        where (c.user_id = #{userId} or ca.signed_by = #{userId})
+        <if test="contractName != null and contractName != ''">
+            and c.contract_name like concat('%',#{contractName},'%')
+        </if>
+        <if test="isComplete != null">
+            and c.is_complete = #{isComplete}
+        </if>
+        and c.draft_status = 0
+        group by c.id
+        order by c.create_time desc
+    </select>
+    <select id="selectCountByMyReceive" resultType="java.lang.Integer">
+        select count(1)
+        from contract c
+        left join contract_and_user ca on c.id = ca.contract_id
+        where ca.copy_user = #{userId}
+    </select>
+    <select id="selectCountByMySigned" resultType="java.lang.Integer">
+        select count(1)
+        from contract c
+        left join contract_and_user ca on c.id = ca.contract_id
+        where ca.user_id = #{userId}
+    </select>
+    <select id="selectCountByMyCopy" resultType="java.lang.Integer">
+        select count(1)
+        from contract c
+        left join contract_and_user ca on c.id = ca.contract_id
+        where ca.copy_user = #{userId}
+    </select>
+    <select id="selectCountByMyOperate" resultType="java.lang.Integer">
+        select count(1)
+        from contract c
+        left join contract_and_user ca on c.id = ca.contract_id and ca.status in (0, 1)
+        where ca.user_id = #{userId}
+           or ca.signed_by = #{userId}
+    </select>
+    <select id="selectCountByOtherOperate" resultType="java.lang.Integer">
+        select COUNT(1)
+        from contract c
+        left join contract_and_user ca on c.id = ca.contract_id and ca.status in (0, 1)
+        where (ca.user_id = #{userId} and ca.signed_by != #{userId})
+           or (ca.user_id != #{userId} and ca.signed_by = #{userId})
+    </select>
+    <select id="selectCountByMyFinish" resultType="java.lang.Integer">
+        select count(1)
+        from contract c
+        left join contract_and_user ca on c.id = ca.contract_id and ca.status in (2, 3)
+        where ca.user_id = #{userId}
+           or ca.signed_by = #{userId}
+    </select>
+    <select id="selectMyCopyList" resultType="com.sqx.modules.contract.entity.Contract">
+        select c.*
+        from contract c
+        left join contract_and_user ca on c.id = ca.contract_id
+        where ca.copy_user = #{userId}  and c.draft_status = 0
+    </select>
+    <select id="selectCountByWaitForSign" resultType="java.lang.Integer">
+        select count(1)
+        from contract c
+        left join contract_and_user ca on c.id = ca.contract_id
+        where ca.signed_by = #{userId}
+          and ca.status = 0
+    </select>
+    <select id="selectCountByWaitForApproved" resultType="java.lang.Integer">
+        select count(1)
+        from contract c
+        left join contract_and_user ca on c.id = ca.contract_id
+        where ca.signed_by = #{userId}
+          and ca.status = 1
+    </select>
+    <select id="selectCountByDraftBox" resultType="java.lang.Integer">
+        select count(1)
+        from contract c
+        where c.user_id = #{userId}  and c.draft_status = 1
+    </select>
+    <select id="selectDraftBoxList" resultType="com.sqx.modules.contract.entity.Contract">
+        select c.*,u.user_name as userName,u.avatar as userAvatar
+        from contract c
+        left join contract_and_user ca on c.id = ca.contract_id
+        left join tb_user u on u.user_id = c.user_id
+        where ca.user_id = #{userId} and c.draft_status = 1
+        order by c.create_time desc
+    </select>
+    <select id="selectSignWaitList" resultType="com.sqx.modules.contract.entity.Contract">
+        select c.*,u.user_name as userName,u.avatar as userAvatar
+        from contract c
+        left join contract_and_user ca on c.id = ca.contract_id
+        left join tb_user u on u.user_id = c.user_id
+        where ca.signed_by = #{userId}
+          and ca.sign_or_approved = 0 and ca.status = 0
+        order by c.create_time desc
+    </select>
+    <select id="selectApprovalList" resultType="com.sqx.modules.contract.entity.Contract">
+        select c.*
+        from contract c
+        left join contract_and_user ca on c.id = ca.contract_id and ca.status = 1
+        where (ca.user_id = #{userId}
+            or ca.signed_by = #{userId})
+          and ca.sign_or_approved = 1
+        order by c.create_time desc
+    </select>
+    <select id="selectAllContractList" resultType="com.sqx.modules.contract.entity.Contract">
+        select c.*,
+        u.user_name as userName,tb.user_name as signUserName,tc.user_name as copyUserName
+        from contract c
+        left join contract_and_user ca on c.id = ca.contract_id
+        left join tb_user u on c.user_id = u.user_id
+        left join tb_user tb on ca.signed_by = tb.user_id
+        left join tb_user tc on ca.copy_user = tc.user_id
+        where 1=1
+        <if test="contract.contractName != null and contract.contractName != ''">
+            and c.contract_name like concat('%',#{contract.contractName},'%')
+        </if>
+        <if test="contract.userName != null and contract.userName != ''">
+            and u.user_name like concat('%',#{contract.userName},'%')
+        </if>
+        <if test="contract.signUserName != null and contract.signUserName != ''">
+            and tb.user_name like concat('%',#{contract.signUserName},'%')
+        </if>
+        <if test="contract.copyUserName != null and contract.copyUserName != ''">
+            and tc.user_name like concat('%',#{contract.copyUserName},'%')
+        </if>
+        <if test="contract.contractType != null and contract.contractType != ''">
+            and c.type = #{contract.contractType}
+        </if>
+        <if test="contract.isComplete != null and contract.isComplete != ''">
+            and c.is_complete = #{contract.isComplete}
+        </if>
+        <if test="contract.draftStatus != null and contract.draftStatus != ''">
+            and c.draft_status = #{contract.draftStatus}
+        </if>
+        group by c.id
+        order by c.create_time desc
+    </select>
+    <select id="selectAllCount" resultType="java.lang.Integer">
+        select count(*) from contract
+        where 1 = 1
+        <if test="type == 1">
+            and date_format(create_time,'%Y-%m-%d') = date_format(#{date},'%Y-%m-%d')
+        </if>
+        <if test="type == 2">
+            and date_format(create_time,'%Y-%m')=date_format(#{date},'%Y-%m')
+        </if>
+        <if test="type == 3">
+            and date_format(create_time,'%Y')=date_format(#{date},'%Y')
+        </if>
+    </select>
+    <select id="selectAllCount1" resultType="java.lang.Integer">
+        select count(*) from contract c
+        where 1 = 1 and c.is_complete = 1
+        <if test="type == 1">
+            and date_format(c.create_time,'%Y-%m-%d') = date_format(#{date},'%Y-%m-%d')
+        </if>
+        <if test="type == 2">
+            and date_format(c.create_time,'%Y-%m')=date_format(#{date},'%Y-%m')
+        </if>
+        <if test="type == 3">
+            and date_format(c.create_time,'%Y')=date_format(#{date},'%Y')
+        </if>
+    </select>
+</mapper>

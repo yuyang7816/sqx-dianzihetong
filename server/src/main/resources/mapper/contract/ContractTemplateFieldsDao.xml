@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sqx.modules.contract.dao.ContractTemplateFieldsDao">
+
+    <resultMap id="BaseResultMap" type="com.sqx.modules.contract.entity.ContractTemplateFields">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="templateId" column="template_id" jdbcType="INTEGER"/>
+            <result property="fieldName" column="field_name" jdbcType="VARCHAR"/>
+            <result property="filedValue" column="filed_value" jdbcType="VARCHAR"/>
+            <result property="sort" column="sort" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,template_id,field_name,
+        filed_value,sort,create_time
+    </sql>
+    <insert id="insertBatch">
+        insert into contract_template_fields
+<!--        <trim prefix="(" suffix=")" suffixOverrides=",">-->
+<!--                <foreach collection="templateFieldList" item="dataJsonVo" index="index" separator=",">-->
+                   ( template_id,
+                    field_name,
+                    filed_value,
+                    sort,
+                    create_time)
+<!--                </foreach>-->
+<!--        </trim>-->
+        values
+<!--        <trim prefix="(" suffix=")" suffixOverrides=",">-->
+                <foreach collection="templateFieldList" item="dataJsonVo" index="index" separator=",">
+                    (#{dataJsonVo.templateId},
+                    #{dataJsonVo.fieldName},
+                    #{dataJsonVo.filedValue},
+                    #{dataJsonVo.sort},
+                    #{dataJsonVo.createTime})
+                </foreach>
+<!--        </trim>-->
+    </insert>
+    <update id="updateBatch">
+        update contract_template_fields
+        <trim prefix="set" suffixOverrides=",">
+                <foreach collection="templateFieldList" item="dataJsonVo" index="index" separator=",">
+                    field_name = #{dataJsonVo.fieldName},
+                    filed_value = #{dataJsonVo.filedValue},
+                    sort = #{dataJsonVo.sort}
+                </foreach>
+        </trim>
+        where id in
+        <foreach collection="templateFieldList" item="field" index="index" open="(" close=")" separator=",">
+            #{field.id}
+        </foreach>
+    </update>
+    <select id="selectByContractId" resultType="com.sqx.modules.contract.entity.ContractTemplateFields">
+        select
+        <include refid="Base_Column_List"/>
+        from contract_template_fields
+        where template_id = #{id}
+        order by sort
+    </select>
+    <select id="selectByTemplateId" resultType="com.sqx.modules.contract.entity.ContractTemplateFields">
+        select
+        <include refid="Base_Column_List"/>
+        from contract_template_fields
+        where template_id = #{templateId}
+        order by sort
+    </select>
+</mapper>

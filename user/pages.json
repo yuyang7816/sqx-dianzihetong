@@ -1,0 +1,376 @@
+{
+	"easycom": {
+		"autoscan": true,
+		// 注意一定要放在custom里，否则无效，https://ask.dcloud.net.cn/question/131175
+		"custom": {
+			"^u--(.*)": "@/uni_modules/uview-plus/components/u-$1/u-$1.vue",
+			"^up-(.*)": "@/uni_modules/uview-plus/components/u-$1/u-$1.vue",
+			"^u-([^-].*)": "@/uni_modules/uview-plus/components/u-$1/u-$1.vue"
+		}
+	},
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "首页",
+				"enablePullDownRefresh": true,
+				"navigationBarBackgroundColor": "#0c9afe",
+				"navigationBarTextStyle": "white"
+					// #ifdef H5 
+					,
+				"navigationStyle": "custom"
+				// #endif 
+			}
+		},
+		{
+			"path": "pages/my/my",
+			"style": {
+				"navigationBarTitleText": "我的",
+				"navigationBarBackgroundColor": "#0096FF",
+				"navigationBarTextStyle": "white"
+					// #ifdef H5
+					,
+				"navigationStyle": "custom"
+				// #endif 
+			}
+		},
+		{
+			"path": "pages/approval/approval",
+			"style": {
+				"navigationBarTitleText": "合同管理",
+				"enablePullDownRefresh": true,
+				"navigationBarBackgroundColor": "#0096FF",
+				"navigationBarTextStyle": "white"
+					// #ifdef H5
+					,
+				"navigationStyle": "custom"
+				// #endif 
+			}
+		},
+		{
+			"path": "pages/webView/webView",
+			"style": {
+				"navigationBarTitleText": ""
+			}
+		},
+		{
+			"path": "pages/contract/contract",
+			"style": {
+				"navigationBarTitleText": "全部合同",
+				"enablePullDownRefresh": true,
+				"navigationBarBackgroundColor": "#0096FF",
+				"navigationBarTextStyle": "white"
+					// #ifdef H5
+					,
+				"navigationStyle": "custom"
+				// #endif 
+			}
+		},
+		{
+			"path": "pages/public/login",
+			"style": {
+				"navigationBarTitleText": "登录",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/public/resetPwd",
+			"style": {
+				"navigationBarTitleText": "重置密码",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/my/invitationUser",
+			"style": {
+				"navigationBarTitleText": "邀请好友"
+					// #ifdef H5
+					,
+				"navigationStyle": "custom"
+				// #endif 
+			}
+		}
+	],
+	"subPackages": [{
+		"root": "package",
+		"pages": [{
+				"path": "seal/index",
+				"style": {
+					"navigationBarTitleText": "印章管理",
+					"enablePullDownRefresh": true
+						// #ifdef H5
+						,
+					"navigationStyle": "custom"
+					// #endif 
+				}
+			}, {
+				"path": "seal/updete",
+				"style": {
+					"navigationBarTitleText": "编辑个人印章"
+						// #ifdef H5
+						,
+					"navigationStyle": "custom"
+					// #endif 
+				}
+			}, {
+				"path": "contract/index",
+				"style": {
+					"navigationBarTitleText": "创建合同",
+					"navigationBarBackgroundColor": "#0096FF",
+					"navigationBarTextStyle": "white"
+						// #ifdef H5
+						,
+					"navigationStyle": "custom"
+					// #endif 
+				}
+			}, {
+				"path": "contract/wxContract",
+				"style": {
+					"navigationBarTitleText": "创建合同",
+					"navigationBarBackgroundColor": "#0096FF",
+					"navigationBarTextStyle": "white"
+						// #ifdef H5
+						,
+					"navigationStyle": "custom"
+					// #endif 
+				}
+			},
+			{
+				"path": "enterprise/certification",
+				"style": {
+					"navigationBarTitleText": "企业认证"
+						// #ifdef H5
+						,
+					"navigationStyle": "custom"
+					// #endif 
+				}
+			}, {
+				"path": "enterprise/renzheng",
+				"style": {
+					"navigationBarTitleText": "个人认证"
+						// #ifdef H5
+						,
+					"navigationStyle": "custom"
+					// #endif 
+				}
+			},
+			{
+				"path": "work/received",
+				"style": {
+					"navigationBarTitleText": "我收到的",
+					"enablePullDownRefresh": true,
+					"navigationBarBackgroundColor": "#0096FF",
+					"navigationBarTextStyle": "white"
+						// #ifdef H5
+						,
+					"navigationStyle": "custom"
+					// #endif 
+				}
+			},
+			{
+				"path": "vip/index",
+				"style": {
+					"navigationBarTitleText": "套餐充值"
+						// #ifdef H5
+						,
+					"navigationStyle": "custom"
+					// #endif 
+				}
+			},
+			{
+				"path": "template/index",
+				"style": {
+					"navigationBarTitleText": "合同模板"
+						// #ifdef H5
+						,
+					"navigationStyle": "custom"
+					// #endif 
+				}
+			}, {
+				"path": "template/detail",
+				"style": {
+					"navigationBarTitleText": "合同模板",
+					"navigationBarBackgroundColor": "#0096FF",
+					"navigationBarTextStyle": "white"
+						// #ifdef H5
+						,
+					"navigationStyle": "custom"
+					// #endif 
+				}
+			},
+			{
+				"path": "work/allFile",
+				"style": {
+					"navigationBarTitleText": "全部文件",
+					"enablePullDownRefresh": true
+						// #ifdef H5
+						,
+					"navigationStyle": "custom"
+					// #endif 
+				}
+			},
+			{
+				"path": "work/draft",
+				"style": {
+					"navigationBarTitleText": "草稿箱"
+						// #ifdef H5
+						,
+					"navigationStyle": "custom"
+					// #endif 
+				}
+			},
+			{
+				"path": "work/detail",
+				"style": {
+					"navigationBarTitleText": "合同详情",
+					"navigationBarBackgroundColor": "#0096FF",
+					"navigationBarTextStyle": "white"
+						// #ifdef H5
+						,
+					"navigationStyle": "custom"
+					// #endif 
+				}
+			}, {
+				"path": "work/sign",
+				"style": {
+					"navigationBarTitleText": "待我签署",
+					"navigationBarBackgroundColor": "#0096FF",
+					"navigationBarTextStyle": "white"
+						// #ifdef H5
+						,
+					"navigationStyle": "custom"
+					// #endif 
+				}
+			},
+			{
+				"path": "seal/updeteComp",
+				"style": {
+					"navigationBarTitleText": "编辑企业印章"
+						// #ifdef H5
+						,
+					"navigationStyle": "custom"
+					// #endif 
+				}
+			},
+			{
+				"path": "contract/add",
+				"style": {
+					"navigationBarTitleText": "添加信息"
+						// #ifdef H5
+						,
+					"navigationStyle": "custom"
+					// #endif 
+				}
+			},
+			{
+				"path": "contract/preview",
+				"style": {
+					"navigationBarTitleText": "合同预览"
+						// #ifdef H5
+						,
+					"navigationStyle": "custom"
+					// #endif 
+				}
+			}
+
+		]
+	}, {
+		"root": "my",
+		"pages": [{
+				"path": "setting/customer",
+				"style": {
+					"navigationBarTitleText": "联系客服"
+						// #ifdef H5
+						,
+					"navigationStyle": "custom"
+					// #endif 
+				}
+			},
+			{
+				"path": "setting/index",
+				"style": {
+					"navigationBarTitleText": "设置中心"
+						// #ifdef H5
+						,
+					"navigationStyle": "custom"
+					// #endif 
+				}
+			},
+			{
+				"path": "setting/xieyi",
+				"style": {
+					"navigationBarTitleText": ""
+						// #ifdef H5
+						,
+					"navigationStyle": "custom"
+					// #endif 
+				}
+			},
+			{
+				"path": "setting/logOff",
+				"style": {
+					"navigationBarTitleText": "注销账号"
+						// #ifdef H5
+						,
+					"navigationStyle": "custom"
+					// #endif 
+				}
+			},
+			{
+				"path": "feedbackIndex/feedbackIndex",
+				"style": {
+					"navigationBarTitleText": "帮助中心"
+						// #ifdef H5
+						,
+					"navigationStyle": "custom"
+					// #endif 
+				}
+			},
+			{
+				"path": "helpDetail/helpDetail",
+				"style": {
+					"navigationBarTitleText": ""
+						// #ifdef H5
+						,
+					"navigationStyle": "custom"
+					// #endif 
+				}
+			},
+			{
+				"path": "feedback/feedback",
+				"style": {
+					"navigationBarTitleText": "意见反馈"
+						// #ifdef H5
+						,
+					"navigationStyle": "custom"
+					// #endif 
+				}
+
+			}
+
+		]
+	}],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "电子合同",
+		"navigationBarBackgroundColor": "#ffffff",
+		"backgroundColor": "#ffffff"
+	},
+	"tabBar": {
+		"color": "#333333",
+		"selectedColor": "#0096FF",
+		"backgroundColor": "#FFFFFF",
+		"borderStyle": "white",
+
+		"list": [{
+			"pagePath": "pages/index/index"
+		}, {
+			"pagePath": "pages/approval/approval"
+		}, {
+			"pagePath": "pages/contract/contract"
+		}, {
+			"pagePath": "pages/my/my"
+		}]
+	},
+	"uniIdRouter": {}
+}

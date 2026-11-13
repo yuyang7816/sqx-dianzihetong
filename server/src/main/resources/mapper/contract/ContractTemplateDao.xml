@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sqx.modules.contract.dao.ContractTemplateDao">
+
+    <resultMap id="BaseResultMap" type="com.sqx.modules.contract.entity.ContractTemplate">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="conNumber" column="con_number" jdbcType="VARCHAR"/>
+        <result property="templateName" column="template_name" jdbcType="VARCHAR"/>
+        <result property="contractUrl" column="contract_url" jdbcType="VARCHAR"/>
+        <result property="typeId" column="type_id" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="createUserId" column="create_user_id" jdbcType="INTEGER"/>
+        <result property="updateUserId" column="update_user_id" jdbcType="INTEGER"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,con_number,template_name,
+        contract_url,contract_img,type_id,create_time,
+        create_user_id,update_user_id,update_time,
+        remark,sort
+    </sql>
+    <select id="selectByTypeId" resultType="com.sqx.modules.contract.entity.ContractTemplate">
+        select
+        <include refid="Base_Column_List"/>
+        from contract_template
+        where type_id = #{id}
+    </select>
+    <select id="selectByAllList" resultType="com.sqx.modules.contract.entity.ContractTemplate">
+        select
+        <include refid="Base_Column_List"/>
+        from contract_template
+        <where>
+                <if test="contractTemplate.templateName!=null">
+                    and template_name like concat('%',#{contractTemplate.templateName},'%')
+                </if>
+                <if test="contractTemplate.typeId!=null">
+                    and type_id = #{contractTemplate.typeId}
+            </if>
+        </where>
+    </select>
+</mapper>

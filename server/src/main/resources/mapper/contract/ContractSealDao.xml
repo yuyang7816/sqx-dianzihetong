@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sqx.modules.contract.dao.ContractSealDao">
+
+    <resultMap id="BaseResultMap" type="com.sqx.modules.contract.entity.ContractSeal">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="sealUrl" column="seal_url" jdbcType="VARCHAR"/>
+            <result property="signUrl" column="sign_url" jdbcType="VARCHAR"/>
+            <result property="companySeal" column="company_seal" jdbcType="VARCHAR"/>
+            <result property="userId" column="user_id" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,seal_url,sign_url,
+        company_seal,user_id,create_time
+    </sql>
+    <select id="selectContractSealList" resultType="com.sqx.modules.contract.entity.ContractSeal">
+        select
+        cs.id,
+        cs.seal_url,
+        cs.sign_url,
+        cs.company_seal,
+        cs.user_id,
+        cs.create_time,
+        case
+            when cs.seal_url is not null then uc.name
+            when cs.company_seal is not null then e.enterprise_name
+            else u.user_name
+        end as userName
+        from contract_seal cs
+        left join tb_user u on cs.user_id = u.user_id
+        left join user_certification uc on cs.user_id = uc.user_id
+        left join enterprise e on cs.user_id = e.user_id
+        where 1=1
+        <if test="contractSeal.userId != null and contractSeal.userId != ''">
+            and cs.user_id = #{contractSeal.userId}
+        </if>
+        <if test="contractSeal.userName != null and contractSeal.userName != ''">
+            AND (
+            u.user_name LIKE CONCAT('%', #{contractSeal.userName}, '%')
+            OR uc.name LIKE CONCAT('%', #{contractSeal.userName}, '%')
+            OR e.enterprise_name LIKE CONCAT('%', #{contractSeal.userName}, '%')
+            )
+        </if>
+        order by cs.create_time desc
+    </select>
+</mapper>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sqx.modules.contract.dao.ContractAndUserDao">
+
+    <resultMap id="BaseResultMap" type="com.sqx.modules.contract.entity.ContractAndUser">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="contractId" column="contract_id" jdbcType="INTEGER"/>
+            <result property="userId" column="user_id" jdbcType="INTEGER"/>
+            <result property="signedBy" column="signed_by" jdbcType="INTEGER"/>
+            <result property="status" column="status" jdbcType="INTEGER"/>
+            <result property="startTime" column="start_time" jdbcType="DATE"/>
+            <result property="createUserId" column="create_user_id" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateUserId" column="update_user_id" jdbcType="INTEGER"/>
+            <result property="endTime" column="end_time" jdbcType="DATE"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,contract_id,user_id,signed_by,
+        status,start_time,create_user_id,
+        create_time,update_user_id,end_time,
+        update_time
+    </sql>
+    <insert id="insertBatch">
+        insert into contract_and_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                <foreach collection="contractAndUsers" item="contractAndUser" index="index" separator=",">
+                    id,
+                    contract_id,
+                    user_id,
+                    signed_by,
+                    status,
+                    start_time,
+                    create_user_id,
+                    create_time,
+                    update_user_id,
+                    end_time,
+                    update_time
+               </foreach>
+        </trim>
+                    <trim prefix="values (" suffix=")" suffixOverrides=",">
+                        <foreach collection="contractAndUsers" item="contractAndUser" index="index" separator=",">
+                            #{contractAndUser.id,jdbcType=INTEGER},
+                            #{contractAndUser.contractId,jdbcType=INTEGER},
+                            #{contractAndUser.userId,jdbcType=INTEGER},
+                            #{contractAndUser.signedBy,jdbcType=INTEGER},
+                            #{contractAndUser.status,jdbcType=INTEGER},
+                            #{contractAndUser.startTime,jdbcType=DATE},
+                            #{contractAndUser.createUserId,jdbcType=INTEGER},
+                            #{contractAndUser.createTime,jdbcType=TIMESTAMP},
+                            #{contractAndUser.updateUserId,jdbcType=INTEGER},
+                            #{contractAndUser.endTime,jdbcType=DATE},
+                            #{contractAndUser.updateTime,jdbcType=TIMESTAMP}
+                        </foreach>
+                    </trim>
+    </insert>
+    <select id="selectByContractId" resultType="com.sqx.modules.contract.entity.ContractAndUser">
+        select * from contract_and_user
+        where contract_id = #{contractId}
+    </select>
+    <select id="selectByUserIdOrSignedBy" resultType="com.sqx.modules.contract.entity.ContractAndUser">
+        select * from contract_and_user
+        where contract_id = #{contractId}
+        and (user_id = #{userId}
+        or signed_by = #{userId})
+        group by contract_id
+        order by create_time desc
+    </select>
+    <select id="selectByContractAndUser" resultType="com.sqx.modules.contract.entity.ContractAndUser">
+        select * from contract_and_user
+        where contract_id = #{contractId}
+        and (user_id = #{userId}
+        or signed_by = #{userId})
+    </select>
+    <select id="selectByReceivingUser" resultType="com.sqx.modules.contract.entity.ContractAndUser">
+        select * from contract_and_user
+        where receiving_user = #{userId}
+    </select>
+    <select id="selectByStatus" resultType="com.sqx.modules.contract.entity.ContractAndUser">
+        select * from contract_and_user
+        where contract_id = #{id} and status in (0,1)
+        order by create_time desc
+    </select>
+    <select id="selectByContractId1" resultType="com.sqx.modules.contract.entity.ContractAndUser">
+        select ca.*, tu.avatar as signUserHeadImg, tu1.avatar as copyUserHeadImg, tu2.avatar as userAvatar
+        from contract_and_user ca
+        left join tb_user tu on ca.signed_by = tu.user_id
+        left join tb_user tu1 on ca.copy_user = tu1.user_id
+        left join tb_user tu2 on ca.user_id = tu2.user_id
+        where ca.contract_id = #{contractId}
+    </select>
+</mapper>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sqx.modules.enterprise.dao.EnterpriseDao">
+
+    <resultMap id="BaseResultMap" type="com.sqx.modules.enterprise.entity.Enterprise">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="enterpriseName" column="enterprise_name" jdbcType="VARCHAR"/>
+        <result property="companyAddress" column="company_address" jdbcType="VARCHAR"/>
+        <result property="legalPerson" column="legal_person" jdbcType="VARCHAR"/>
+        <result property="registeredCapital" column="registered_capital" jdbcType="VARCHAR"/>
+        <result property="registrationTime" column="registration_time" jdbcType="TIMESTAMP"/>
+        <result property="startTime" column="start_time" jdbcType="TIME"/>
+        <result property="endTime" column="end_time" jdbcType="TIME"/>
+        <result property="frontPhotoBusinessLicense" column="front_photo_business_license" jdbcType="VARCHAR"/>
+        <result property="backPhotoBusinessLicense" column="back_photo_business_license" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="createUserId" column="create_user_id" jdbcType="INTEGER"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="updateUserId" column="update_user_id" jdbcType="INTEGER"/>
+        <result property="isReal" column="is_real" jdbcType="INTEGER"/>
+        <result property="auditReason" column="audit_reason" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,enterprise_name,company_address,
+        legal_person,registered_capital,registration_time,
+        start_time,end_time,front_photo_business_license,
+        back_photo_business_license,status,create_time,
+        create_user_id,update_time,update_user_id,
+        is_real,user_id,audit_reason,credit_code
+    </sql>
+    <select id="selectByAllList" resultType="com.sqx.modules.enterprise.entity.Enterprise">
+        select
+        <include refid="Base_Column_List"/>
+        from enterprise
+        <where>
+            <if test="enterprise.enterpriseName != null and enterprise.enterpriseName != ''">
+                and enterprise_name like concat('%',#{enterprise.enterpriseName},'%')
+            </if>
+            <if test="enterprise.status != null and enterprise.status != ''">
+                and status = #{enterprise.status}
+            </if>
+            <if test="enterprise.isReal != null and enterprise.isReal != ''">
+                and is_real = #{enterprise.isReal}
+            </if>
+            <if test="enterprise.userId != null and enterprise.userId != ''">
+                and user_id = #{enterprise.userId}
+            </if>
+            <if test="enterprise.createTime != null">
+                and create_time between #{enterprise.createTime} and #{enterprise.createTime}
+            </if>
+            <if test="enterprise.updateTime != null">
+                and update_time between #{enterprise.updateTime} and #{enterprise.updateTime}
+            </if>
+            <if test="enterprise.registrationTime != null">
+                and registration_time between #{enterprise.registrationTime} and #{enterprise.registrationTime}
+            </if>
+            <if test="enterprise.startTime != null">
+                and start_time between #{enterprise.startTime} and #{enterprise.startTime}
+            </if>
+            <if test="enterprise.endTime != null">
+                and end_time between #{enterprise.endTime} and #{enterprise.endTime}
+            </if>
+            <if test="enterprise.auditReason != null and enterprise.auditReason != ''">
+                and audit_reason like concat('%',#{enterprise.auditReason},'%')
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+    <select id="selectByEnterprise" resultType="com.sqx.modules.enterprise.entity.Enterprise">
+        select *
+        from enterprise
+        where id = #{id}
+    </select>
+    <select id="selectAllCount" resultType="java.lang.Integer">
+        select count(*)
+        from enterprise
+        where 1= 1
+        <if test="type == 1">
+            and date_format(create_time,'%Y-%m-%d') = date_format(#{date},'%Y-%m-%d')
+        </if>
+        <if test="type == 2">
+            and date_format(create_time,'%Y-%m')=date_format(#{date},'%Y-%m')
+        </if>
+        <if test="type == 3">
+            and date_format(create_time,'%Y')=date_format(#{date},'%Y')
+        </if>
+    </select>
+</mapper>
